@@ -38,54 +38,57 @@ function pagelines_check_php(){
 	function pagelines_ajax_callback() {
 		global $wpdb; // this is how you get access to the database
 
-		if($_POST['type']){
-			$save_type = $_POST['type'];
-		}else $save_type = null;
+    if($_POST['type']){
+      $save_type = $_POST['type'];
+    }else $save_type = null;
+    
+    //Uploads
+    if( $save_type == 'upload' ) {
+      
+    check_admin_referer();
+      
+    $clickedID = $_POST['data']; // Acts as the name
 
-		//Uploads
-		if( $save_type == 'upload' ) {
-		$clickedID = $_POST['data']; // Acts as the name
+    $arr_file_type = wp_check_filetype( basename( $_FILES[$clickedID]['name']));
+    $uploaded_file_type = $arr_file_type['type'];
+    // Set an array containing a list of acceptable formats
+    $allowed_file_types = array( 'image/jpg','image/jpeg','image/gif','image/png', 'image/x-icon' );
+    if( in_array( $uploaded_file_type, $allowed_file_types ) ) {
 
-		$arr_file_type = wp_check_filetype( basename( $_FILES[$clickedID]['name']));
-		$uploaded_file_type = $arr_file_type['type'];
-		// Set an array containing a list of acceptable formats
-		$allowed_file_types = array( 'image/jpg','image/jpeg','image/gif','image/png', 'image/x-icon' );
-		if( in_array( $uploaded_file_type, $allowed_file_types ) ) {
+      $filename = $_FILES[$clickedID];
+      $filename['name'] = preg_replace( '/[^a-zA-Z0-9._\-]/', '', $filename['name'] );
+      $override['test_form'] = false;
+      $override['action'] = 'wp_handle_upload';
+      $uploaded_file = wp_handle_upload( $filename, $override );
+      $upload_tracking[] = $clickedID;
+      pagelines_update_option( $clickedID , $uploaded_file['url'] );
 
-			$filename = $_FILES[$clickedID];
-			$filename['name'] = preg_replace( '/[^a-zA-Z0-9._\-]/', '', $filename['name'] );
-			$override['test_form'] = false;
-			$override['action'] = 'wp_handle_upload';
-			$uploaded_file = wp_handle_upload( $filename, $override );
-			$upload_tracking[] = $clickedID;
-			pagelines_update_option( $clickedID , $uploaded_file['url'] );
+      $name = 'PageLines- ' .addslashes( $filename['name'] );
 
-			$name = 'PageLines- ' .addslashes( $filename['name'] );
-
-			$attachment = array(
+      $attachment = array(
                                 'post_mime_type' => $uploaded_file_type,
                                 'post_title' => $name,
                                 'post_content' => '',
                                 'post_status' => 'inherit'
                         );
 
-			$attach_id = wp_insert_attachment( $attachment, $uploaded_file['file'] );
-			$attach_data = wp_generate_attachment_metadata( $attach_id, $uploaded_file['file'] );
-			wp_update_attachment_metadata( $attach_id,  $attach_data );
-			} else {
-				$uploaded_file['error'] = 'Unsupported file type!';
-		}
-		if( !empty( $uploaded_file['error'] ) ) {
-			echo 'Upload Error: ' . $uploaded_file['error'];
-		} else {
-			echo $uploaded_file['url']; // Is the Response
-			}
-		}
-		elseif( $save_type == 'image_reset' ){
-			$id = $_POST['data']; // Acts as the name
-			pagelines_update_option( $id, null );
-		}
-		die();
+      $attach_id = wp_insert_attachment( $attachment, $uploaded_file['file'] );
+      $attach_data = wp_generate_attachment_metadata( $attach_id, $uploaded_file['file'] );
+      wp_update_attachment_metadata( $attach_id,  $attach_data );
+      } else {
+        $uploaded_file['error'] = 'Unsupported file type!';
+    }
+    if( !empty( $uploaded_file['error'] ) ) {
+      echo 'Upload Error: ' . $uploaded_file['error'];
+    } else {
+      echo $uploaded_file['url']; // Is the Response
+      }
+    }
+    elseif( $save_type == 'image_reset' ){
+      $id = $_POST['data']; // Acts as the name
+      pagelines_update_option( $id, null );
+    }
+    die();
 	}
 
 // ====================================================================================
@@ -97,47 +100,50 @@ function pagelines_check_php(){
 	function ajax_save_template_map() {
 		global $wpdb; // this is how you get access to the database
 
+    check_ajax_referer( 'update-options' );
+    
+    /* Full Template Map */
 
-		/* Full Template Map */
+    $templatemap = get_option('pagelines_template_map');
 
-		$templatemap = get_option('pagelines_template_map');
+    /* Order of the sections */
+    $section_order =  $_GET['orderdata'];
 
-		/* Order of the sections */
-		$section_order =  $_GET['orderdata'];
+    /* Get array / variable format */
+    parse_str($section_order);
 
-		/* Get array / variable format */
-		parse_str($section_order);
+    /* Selected Template */
+    $selected_template = esc_attr($_GET['template']);
 
-		/* Selected Template */
-		$selected_template = esc_attr($_GET['template']);
+      /* Explode by slash to get heirarchy */
+      $template_heirarchy = explode('-', $selected_template);
 
-			/* Explode by slash to get heirarchy */
-			$template_heirarchy = explode('-', $selected_template);
-
-			if(isset($template_heirarchy[1])){
-				$templatemap[$template_heirarchy[0]]['templates'][$template_heirarchy[1]]['sections'] = urlencode_deep($section);
-			} else {
-				$templatemap[$selected_template]['sections'] = $section;
-			}
+      if(isset($template_heirarchy[1])){
+        $templatemap[$template_heirarchy[0]]['templates'][$template_heirarchy[1]]['sections'] = urlencode_deep($section);
+      } else {
+        $templatemap[$selected_template]['sections'] = $section;
+      }
 
 
-		save_template_map($templatemap);
+    save_template_map($templatemap);
 
-		echo true;
+    echo true;
 
-		die();
+    die();
 	}
 
 	add_action('wp_ajax_pagelines_ajax_save_option', 'pagelines_ajax_save_option_callback');
 	function pagelines_ajax_save_option_callback() {
 
-		if( ! current_user_can( 'edit_theme_options' ) )
-			die( 'Cheatin huh?' );
-		global $wpdb; // this is how you get access to the database
-		$option_name = $_POST['option_name'];
-		$option_value = $_POST['option_value'];
-		update_option($option_name, $option_value);
-		die();
+	if( ! current_user_can( 'edit_theme_options' ) )
+	      die( 'Cheatin huh?' );
+	      
+	    check_admin_referer( 'update-options');
+	    global $wpdb; // this is how you get access to the database
+	    $option_name = $_POST['option_name'];
+	    $option_value = $_POST['option_value'];
+	    update_option($option_name, $option_value);
+	    die();
 	}
 
 	add_action('wp_ajax_pagelines_test_ajax', 'pagelines_test_ajax_callback');

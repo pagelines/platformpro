@@ -1260,6 +1260,7 @@ function build_footer(){?>
 			<div class="restore_column_split">
 				<h4><?php _e('Import Settings', 'pagelines'); ?></h4>
 				<form method="post" enctype="multipart/form-data">
+					<?php wp_nonce_field('upload_settings' ) ?>
 					<input type="hidden" name="settings_upload" value="settings" />
 					<p class="form_input">
 						<input type="file" class="text_input" name="file" id="settings-file" />

@@ -275,6 +275,10 @@ function pagelines_import_export(){
 	}
 
 	if ( isset($_POST['settings_upload']) && $_POST['settings_upload'] == 'settings') {
+		$nonce = $_REQUEST['_wpnonce'];
+		if ( ! wp_verify_nonce( $nonce, 'upload_settings' ) ) {
+			die( 'Security check' ); 
+		}
 
 		if (strpos($_FILES['file']['name'], 'Settings') === false && strpos($_FILES['file']['name'], 'settings') === false){
 			wp_redirect( admin_url('admin.php?page=pagelines&pageaction=import&error=wrongfile') );
