@@ -69,7 +69,8 @@
 							action: 'pagelines_save_sortable',
 							orderdata: order,
 							template: selected_template, 
-							field: 'sections'
+							field: 'sections',
+							nonce: SaveSortableNonce.Nonce
 						};
 
 						// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
@@ -549,4 +550,3 @@ jQuery.fn.center = function ( relative_element ) {
     this.css("left", ( jQuery(relative_element).width() - this.width() ) / 2+jQuery(relative_element).scrollLeft() + "px");
     return this;
 }
-

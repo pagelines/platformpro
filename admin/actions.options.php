@@ -49,6 +49,8 @@ function pagelines_theme_settings_init() {
 	add_action('load-post.php',  'pagelines_theme_settings_scripts');
 	add_action('load-post-new.php',  'pagelines_theme_settings_scripts');
 	wp_enqueue_script( 'platform-admin-js', PL_ADMIN_JS . '/platform.admin.js');
+	$nonce = wp_create_nonce( 'update-options' );
+	wp_localize_script( 'platform-admin-js', 'SaveSortableNonce', array( 'Nonce' => $nonce ) );
 }
 
 function pagelines_theme_settings_scripts() {	
@@ -356,4 +358,3 @@ function pagelines_error_messages(){
 	endif;
 
 } 
-

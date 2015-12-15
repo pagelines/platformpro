@@ -100,7 +100,8 @@ function pagelines_check_php(){
 	function ajax_save_template_map() {
 		global $wpdb; // this is how you get access to the database
 
-    check_ajax_referer( 'update-options' );
+		
+    check_admin_referer( 'update-options', 'nonce' );
     
     /* Full Template Map */
 
