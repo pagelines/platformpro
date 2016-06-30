@@ -46,9 +46,10 @@ function pagelines_default_widget($id, $name, $default){
  * Sidebar - Standard Sidebar Setup
  *
  */
-function pagelines_standard_sidebar($name, $description){
+function pagelines_standard_sidebar($name, $description, $id){
 	return array(
 		'name'=> $name,
+    'id'  => $id,
 		'description' => $description,
 	    'before_widget' => '<li id="%1$s" class="%2$s widget fix"><div class="widget-pad">',
 	    'after_widget' => '</div></li>',
@@ -477,5 +478,3 @@ function pagelines_cred(){
 	}
 
 }
-
-

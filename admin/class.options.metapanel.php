@@ -45,6 +45,10 @@ class PageLinesMetaPanel {
 		$key = $option_settings['id'];
 		
 		if($location == 'top'){
+      
+      if( ! isset( $top[$key] ) ) {
+        $top[$key] = new stdClass;
+      }
 			
 			$top[$key]->options = $option_array;
 			$top[$key]->icon = $option_settings['icon'];
@@ -53,6 +57,9 @@ class PageLinesMetaPanel {
 			$this->tabs = array_merge($top, $this->tabs);
 			
 		} else {
+      if( ! isset( $this->tabs[$key] ) ) {
+        $this->tabs[$key] = new stdClass;
+      }
 			$this->tabs[$key]->options = $option_array;
 			$this->tabs[$key]->icon = $option_settings['icon'];
 			$this->tabs[$key]->name = $option_settings['name'];
@@ -169,8 +176,8 @@ class PageLinesMetaPanel {
 							</div>
 						</div>
 					</div>
-					<div class="pagelines_metapanel_footer fix">
-							<input type="hidden" name="_posttype" value="<?php echo $this->settings['posttype'];?>" />
+					<div class="pagelines_metapanel_footer fix
+							<input type="hidden" name="_posttype" value="<?php echo get_post_type( $_GET['post'] ); ?>" />
 							<input id="update" class="button-primary" type="submit" value="<?php _e("Save Meta Settings",'pagelines'); ?>" accesskey="p" tabindex="5" name="update"/>
 					</div>
 				</div>
@@ -410,6 +417,3 @@ function do_global_meta_options(){
 
 	register_metatab($metatab_settings,  $global_meta_options, 'top');
 }
-
-
-

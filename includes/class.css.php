@@ -12,6 +12,8 @@
  */
 class PageLinesCSS {
 	
+  var $css = '';
+  
 	function create( $format = 'inline') {
 		
 		if( $format == 'texturize' ){

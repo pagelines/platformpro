@@ -489,8 +489,11 @@ function pagelines_process_template_map( $callback , $args = array()){
 		if($template == 'templates'){
 			
 			if($settings['area_titles']) echo '<span class="area_title">Template Area</span>';
-			
-			if(is_array($template_info['templates'][$pagelines_template->template_type]['sections'])){
+
+			if(  
+      is_array( $template_info['templates'] ) &&
+      isset( $template_info['templates'][$pagelines_template->template_type] )
+      ){
 				foreach( $template_info['templates'][$pagelines_template->template_type]['sections'] as $section ):
 			
 					$template_slug = 'templates-'.$pagelines_template->template_type;
@@ -550,4 +553,3 @@ function pagelines_process_template_map( $callback , $args = array()){
 			
 	endforeach;
 }
-

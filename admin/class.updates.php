@@ -123,7 +123,7 @@ class PageLinesUpdateCheck {
 			$pagelines_update = wp_remote_retrieve_body($response);
 
 			// If an error occurred, return FALSE, store for 1 hour
-			if ( $pagelines_update == 'error' || is_wp_error($pagelines_update) || !is_serialized( $pagelines_update ) || $pagelines_update['package'] == 'bad' ) {
+			if ( $pagelines_update == 'error' || is_wp_error($pagelines_update) || !is_serialized( $pagelines_update ) ) {
 				set_transient('pagelines-update-' . $this->theme, array('new_version' => $this->version), 60*60); // store for 1 hour
 				return FALSE;
 			}

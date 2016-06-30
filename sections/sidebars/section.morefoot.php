@@ -29,6 +29,7 @@ class PageLinesMorefoot extends PageLinesSection {
 
 	function section_persistent(){
 		register_sidebar(array(
+      'id'      => $this->id . 'left',
 		'name'=>'MoreFoot Left',
 		'description' => __('Left sidebar in "morefoot" element enabled in options.', 'pagelines'),
 		    'before_widget' => '<div id="%1$s" class="%2$s widget fix">',
@@ -37,6 +38,7 @@ class PageLinesMorefoot extends PageLinesSection {
 		    'after_title' => '</h3>'
 		));
 		register_sidebar(array(
+      'id'      => $this->id . 'middle',
 		'name'=>'MoreFoot Middle',
 		'description' => __('Middle sidebar in "morefoot" element enabled in options.', 'pagelines'),
 		    'before_widget' => '<div id="%1$s" class="%2$s widget fix">',
@@ -46,6 +48,7 @@ class PageLinesMorefoot extends PageLinesSection {
 		));
 		register_sidebar(array(
 		'name'=>'MoreFoot Right',
+    'id'      => $this->id . 'right',
 		'description' => __('Right sidebar in "morefoot" element enabled in options.', 'pagelines'),
 		    'before_widget' => '<div id="%1$s" class="%2$s widget fix">',
 		    'after_widget' => '</div>',

@@ -314,6 +314,7 @@ jQuery(document).ready(function(){
 			  data: { // Additional data to send
 					action: 'pagelines_ajax_post_action',
 					type: 'upload',
+          nonce: SaveSortableNonce.Nonce,
 					data: clickedID },
 			  autoSubmit: true, // Submit file after selection
 			  responseType: false,

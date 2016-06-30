@@ -3,11 +3,10 @@
 /**
  * Define framework version
  */
-$theme_data = get_theme_data(TEMPLATEPATH . '/style.css');
-define('CORE_VERSION', $theme_data['Version']);
+$theme_data = wp_get_theme();
+define('CORE_VERSION', $theme_data->get( 'Version' ) );
 
-$child_theme_data = get_theme_data(STYLESHEETPATH . '/style.css');
-define('CHILD_VERSION', $child_theme_data['Version']);
+define('CHILD_VERSION', $theme_data->get( 'Version' ) );
 	
 /**
  * If Pro Version

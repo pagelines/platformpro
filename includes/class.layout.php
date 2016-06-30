@@ -99,8 +99,16 @@ class PageLinesLayout {
 
 		
 		function default_layout_setup(){
+      
+      if( ! isset( $this->content ) ) {
+        $this->content = new stdClass;
+      }
 			$this->content->width = 960;
 			
+      if( ! isset( $this->gutter ) ) {
+        $this->gutter = new stdClass;
+      }
+      
 			$this->gutter->width = 20;
 			
 			$def_main_two = 640;
@@ -161,22 +169,29 @@ class PageLinesLayout {
 		function set_layout_data(){
 			
 			// Text & IDs
+      $this->hidden = new stdClass;
 				$this->hidden->text = '';
 				$this->hidden->id = 'hidden';
-
+        
+        $this->main_content = new stdClass;
 				$this->main_content->text = 'Main Column';
 				$this->main_content->id = 'layout-main-content';
-
+        
+        $this->sidebar1 = new stdClass;
 				$this->sidebar1->text = 'SB1';
 				$this->sidebar1->id = 'layout-sidebar-1';
-
+        
+        $this->sidebar2 = new stdClass;
 				$this->sidebar2->text = 'SB2';
 				$this->sidebar2->id = 'layout-sidebar-2';
 			
+      $this->content = new stdClass;
 			$this->content->width = 960;
-
+      
+      $this->gutter = new stdClass;
 			$this->gutter->width = 30;
 			
+      $this->builder = new stdClass;
 			$this->builder->width = 1300;
 			$this->fudgefactor = 24;
 		
@@ -198,11 +213,12 @@ class PageLinesLayout {
 				
 				}
 			}
-				
+			$this->margin = new stdClass;
 			$this->margin->width = ($this->builder->width - $this->content->width)/2 - ($this->fudgefactor - 1);
 						
 			$this->sidebar2->width = $this->content->width - $this->main_content->width - $this->sidebar1->width;
-		
+		  
+      $this->dynamic_grid = new stdClass;
 			$this->dynamic_grid->width = $this->content->width/12;
 			
 		
@@ -210,6 +226,17 @@ class PageLinesLayout {
 		
 		
 		function set_wrap_dimensions(){
+      
+      if( ! isset( $this->column_wrap ) ) {
+        $this->column_wrap = new stdClass;
+      }
+      if( ! isset( $this->sidebar_wrap ) ) {
+        $this->sidebar_wrap = new stdClass;
+      }
+      if( ! isset( $this->clip ) ) {
+        $this->clip = new stdClass;
+      }
+      
 			if($this->layout_mode == "two-sidebar-center"){
 				$this->column_wrap->width = $this->main_content->width + $this->sidebar1->width;
 				$this->sidebar_wrap->width = $this->sidebar2->width;
@@ -293,6 +320,9 @@ class PageLinesLayout {
 		
 		function generate_dynamic_columns(){
 			
+      if( ! isset( $this->dcol ) ) {
+        $this->dcol = array();
+      }
 			$config_dynamic_layout = array(
 				
 					2 => array(
@@ -318,6 +348,9 @@ class PageLinesLayout {
 					/*
 						Set Container width (content + gutter as margin prevents the wider area from being seen)
 					*/
+          if( ! isset( $this->dcol[ $number_of_columns ] ) ) {
+            $this->dcol[ $number_of_columns ] = new stdClass;
+          }
 					$this->dcol[ $number_of_columns ]->container_width = $this->content->width + $column_gutter - $round_amount;
 				
 					$column_space = floor( $this->dcol[ $number_of_columns ]->container_width / $number_of_columns );

@@ -37,16 +37,16 @@ function pagelines_check_php(){
 
 	function pagelines_ajax_callback() {
 		global $wpdb; // this is how you get access to the database
-
+        
+    check_admin_referer( 'update-options', 'nonce' );
+    
     if($_POST['type']){
       $save_type = $_POST['type'];
     }else $save_type = null;
     
     //Uploads
     if( $save_type == 'upload' ) {
-      
-    check_admin_referer();
-      
+    
     $clickedID = $_POST['data']; // Acts as the name
 
     $arr_file_type = wp_check_filetype( basename( $_FILES[$clickedID]['name']));

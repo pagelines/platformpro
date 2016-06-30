@@ -11,6 +11,10 @@
 
 ****************************
 
+Version 1.7.0 - Really Final!
+
+ * Fix all PHP warnings and errors, tested with WordPress 4.6 and PHP 7.
+
 Version 1.6.0 - Final Release
 
 - Admin fix js issues with WordPress 3.5
